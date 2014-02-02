@@ -1,0 +1,5 @@
+* IDEIndex does not seem to contain local variables, how to identify them?
+* Decide on the colors to use for coloring variables
+* Theme which plays well with the colored variables
+* Performance improvements
+* Fix NSObject+YOLO so that the workaround is no longer needed
