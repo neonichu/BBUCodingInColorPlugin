@@ -7,26 +7,17 @@
 //
 
 #import <NSObject+YOLO/NSObject+YOLO.h>
-#import <objc/runtime.h>
 
 #import "BBUCodingInColorPlugin.h"
-
-@interface NSObject (Private)
-
-@property id sourceItems;
-@property id sourceModel;
-
--(void)_commonInitDVTSourceTextView;
--(void)fixSyntaxColoringInRange:(NSRange)range;
--(BOOL)isIdentifier;
-
-@end
+#import "BBUIndexHelper.h"
+#import "OhNoMoreXcodeInterfaces.h"
 
 #pragma mark -
 
 @interface BBUCodingInColorPlugin ()
 
-@property NSTextView* textView;
+@property (nonatomic, strong) BBUIndexHelper* indexHelper;
+@property (nonatomic, assign) NSTextView* textView;
 
 @end
 
@@ -46,35 +37,66 @@
 }
 
 - (void)handleChildren:(NSArray*)children {
-    for (id sourceItem in children) {
+    for (DVTSourceModelItem* sourceItem in children) {
         if ([sourceItem isIdentifier]) {
             NSRange range = [sourceItem range];
             if (self.textView.string.length < range.location + range.length) {
                 continue;
             }
             
-            [self.textView setTextColor:[NSColor yellowColor] range:range];
+            NSString* sourceCode = [self.textView.string substringWithRange:range];
+            if ([self.indexHelper isVariableSymbol:sourceCode]) {
+                [self.textView setTextColor:[NSColor yellowColor] range:range];
+            }
+            
+            //NSLog(@"BBUCodingInColor: item %@", soureCode);
         } else {
             [self handleChildren:[sourceItem children]];
         }
     }
 }
 
+#pragma mark -
+
 - (id)initWithBundle:(NSBundle *)plugin {
     if (self = [super init]) {
-        [[objc_getClass("DVTSourceTextView") new] yl_swizzleSelector:@selector(_commonInitDVTSourceTextView)
-                                                           withBlock:^(id sself) {
-                                                               [sself yl_performSelector:@selector(_commonInitDVTSourceTextView) returnAddress:NULL argumentAddresses:NULL];
-                                                               
-                                                               self.textView = sself;
-                                                           }];
+        self.indexHelper = [BBUIndexHelper new];
         
-        [[objc_getClass("DVTTextStorage") new] yl_swizzleSelector:@selector(fixSyntaxColoringInRange:)
-                                                        withBlock:^(id sself, NSRange range) {
-                                                            [sself yl_performSelector:@selector(fixSyntaxColoringInRange:) returnAddress:NULL argumentAddresses:&range, NULL];
-                                                            
-                                                            [self handleChildren:[[[sself sourceModel] sourceItems] children]];
-                                                        }];
+        [[DVTSourceTextView new] yl_swizzleSelector:@selector(_commonInitDVTSourceTextView)
+                                          withBlock:^(DVTSourceTextView* sself) {
+                                              [sself yl_performSelector:@selector(_commonInitDVTSourceTextView)
+                                                          returnAddress:NULL
+                                                      argumentAddresses:NULL];
+                                              
+                                              self.textView = sself;
+                                          }];
+        
+        [[DVTTextStorage new] yl_swizzleSelector:@selector(fixSyntaxColoringInRange:)
+                                       withBlock:^(DVTTextStorage* sself, NSRange range) {
+                                           [sself yl_performSelector:@selector(fixSyntaxColoringInRange:) returnAddress:NULL argumentAddresses:&range, NULL];
+                                           
+                                           [self handleChildren:sself.sourceModel.sourceItems.children];
+                                       }];
+        
+        [[DVTTextStorage new] yl_swizzleSelector:@selector(colorAtCharacterIndex:effectiveRange:context:)
+                                       withBlock:^NSColor*(DVTTextStorage* sself, unsigned long long charIndex,
+                                                           NSRangePointer rangePointer, id context) {
+                                           NSRange range = *rangePointer;
+                                           NSLog(@"range: %@", NSStringFromRange(range));
+                                           
+                                           if (range.location + range.length < self.textView.string.length) {
+                                               NSString* string = [self.textView.string substringWithRange:range];
+                                               NSLog(@"coloring %@", string);
+                                               
+                                               if ([self.indexHelper isVariableSymbol:string]) {
+                                                   return [NSColor yellowColor];
+                                               }
+                                           }
+                                           
+                                           return [sself yl_colorAtCharacterIndex:charIndex
+                                                                   effectiveRange:rangePointer
+                                                                          context:context];
+                                       }];
     }
     return self;
 }

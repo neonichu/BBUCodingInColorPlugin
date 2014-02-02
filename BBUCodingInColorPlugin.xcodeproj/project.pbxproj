@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A59CA3F56EA4A26B566C132 /* libPods-BBUCodingInColorPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDB091F9BFD24384B37D8D43 /* libPods-BBUCodingInColorPlugin.a */; };
+		8613D7FB189D5B7D00C90B17 /* BBUIndexHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 8613D7FA189D5B7D00C90B17 /* BBUIndexHelper.m */; };
 		8649930C18983A250041E0DC /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8649930B18983A250041E0DC /* AppKit.framework */; };
 		8649930E18983A250041E0DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8649930D18983A250041E0DC /* Foundation.framework */; };
 		8649931718983A250041E0DC /* BBUCodingInColorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8649931618983A250041E0DC /* BBUCodingInColorPlugin.m */; };
@@ -15,6 +16,8 @@
 
 /* Begin PBXFileReference section */
 		10DFBA4191994457AD6D86DE /* Pods-BBUCodingInColorPlugin.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BBUCodingInColorPlugin.xcconfig"; path = "Pods/Pods-BBUCodingInColorPlugin.xcconfig"; sourceTree = "<group>"; };
+		8613D7F9189D5B7D00C90B17 /* BBUIndexHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBUIndexHelper.h; sourceTree = "<group>"; };
+		8613D7FA189D5B7D00C90B17 /* BBUIndexHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBUIndexHelper.m; sourceTree = "<group>"; };
 		8649930818983A250041E0DC /* BBUCodingInColorPlugin.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BBUCodingInColorPlugin.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8649930B18983A250041E0DC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		8649930D18983A250041E0DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -22,6 +25,8 @@
 		8649931518983A250041E0DC /* BBUCodingInColorPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BBUCodingInColorPlugin.h; sourceTree = "<group>"; };
 		8649931618983A250041E0DC /* BBUCodingInColorPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BBUCodingInColorPlugin.m; sourceTree = "<group>"; };
 		8649931818983A250041E0DC /* BBUCodingInColorPlugin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BBUCodingInColorPlugin-Prefix.pch"; sourceTree = "<group>"; };
+		8652CF25189D5BBD00820A33 /* CPXcodeInterfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPXcodeInterfaces.h; sourceTree = "<group>"; };
+		86B20618189E56CA000D257D /* OhNoMoreXcodeInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OhNoMoreXcodeInterfaces.h; sourceTree = "<group>"; };
 		EDB091F9BFD24384B37D8D43 /* libPods-BBUCodingInColorPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BBUCodingInColorPlugin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -73,6 +78,10 @@
 			children = (
 				8649931518983A250041E0DC /* BBUCodingInColorPlugin.h */,
 				8649931618983A250041E0DC /* BBUCodingInColorPlugin.m */,
+				8613D7F9189D5B7D00C90B17 /* BBUIndexHelper.h */,
+				8613D7FA189D5B7D00C90B17 /* BBUIndexHelper.m */,
+				8652CF25189D5BBD00820A33 /* CPXcodeInterfaces.h */,
+				86B20618189E56CA000D257D /* OhNoMoreXcodeInterfaces.h */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -184,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8649931718983A250041E0DC /* BBUCodingInColorPlugin.m in Sources */,
+				8613D7FB189D5B7D00C90B17 /* BBUIndexHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +279,11 @@
 				GCC_PREFIX_HEADER = "Supporting_Files/BBUCodingInColorPlugin-Prefix.pch";
 				INFOPLIST_FILE = "Supporting_Files/BBUCodingInColorPlugin-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-undefined",
+					dynamic_lookup,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xcplugin;
 			};
@@ -285,6 +300,11 @@
 				GCC_PREFIX_HEADER = "Supporting_Files/BBUCodingInColorPlugin-Prefix.pch";
 				INFOPLIST_FILE = "Supporting_Files/BBUCodingInColorPlugin-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-undefined",
+					dynamic_lookup,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xcplugin;
 			};
